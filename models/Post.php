@@ -29,13 +29,16 @@ class Post
             author = :author,
             category_id = :category_id';
     
+    // Prepare statement        
     $stmt = $this->conn->prepare($query);
-
+    
+    // Bind parameter
     $stmt->bindParam(':title', $this->title);
     $stmt->bindParam(':body', $this->body);
     $stmt->bindParam(':author', $this->author);
     $stmt->bindParam(':category_id', $this->category_id);
-
+    
+    //Execute query
     if ($stmt->execute()) {
       return true;
     }
@@ -110,4 +113,32 @@ class Post
     $this->category_name = $row['category_name'];
   }  
 
+  // Udpate post
+  public function update()
+  {
+    $query = 'UPDATE ' . $this->table . 
+        ' SET 
+            title = :title,
+            body = :body,
+            author = :author,
+            category_id = :category_id 
+          WHERE 
+          id = :id';
+    
+    $stmt = $this->conn->prepare($query);
+
+    $stmt->bindParam(':id', $this->id);      
+    $stmt->bindParam(':title', $this->title);
+    $stmt->bindParam(':body', $this->body);
+    $stmt->bindParam(':author', $this->author);
+    $stmt->bindParam(':category_id', $this->category_id);
+
+    if ($stmt->execute()) {
+      return true;
+    }
+    
+    printf("Error: %s.\n, $stmt->error");
+
+    return false;  
+  }
 }
